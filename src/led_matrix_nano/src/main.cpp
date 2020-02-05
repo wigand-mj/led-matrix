@@ -4,18 +4,18 @@
 
 //Shift-Register I/O for red input of LEDs
 #define SHIFT_REG_R_DS 7
-#define SHIFT_REG_R_STCP 8
-#define SHIFT_REG_R_SHCP 9
+#define SHIFT_REG_R_SHCP 8
+#define SHIFT_REG_R_STCP 9
 
 //Shift-Register I/O for green input of LEDs
 #define SHIFT_REG_G_DS 3
-#define SHIFT_REG_G_STCP 4
-#define SHIFT_REG_G_SHCP 5
+#define SHIFT_REG_G_SHCP 4
+#define SHIFT_REG_G_STCP 5
 
 // Shift-Register I/O for iransistor IC
 #define SHIFT_REG_T_DS 11
-#define SHIFT_REG_T_STCP 12
-#define SHIFT_REG_T_SHCP 13
+#define SHIFT_REG_T_SHCP 12
+#define SHIFT_REG_T_STCP 13
 
 
 // MEMORY ALLOCATION
@@ -45,23 +45,33 @@ void transistorWrite(short x, short value) {  // Value: [0 - OFF], [1 - ON]
 
 void makeRed(){
 
+/*
   for (int i=0; i<rows;i++){
     for (int j=0; j<columns; j++) {
         registerWrite(i,j,1);
-    }
-  }
+    } }
+*/
 
-for (int i=0; i<rows; i++) {
-    for (int j=0; j<columns; j++) {
-      if (j>rows/2){
-        if (Register[i][j] == 1) {}
-        else if (Register[i][j] == 2) {}
-        else {}
-      } else {
-        
-      }
-    }
-}
+  digitalWrite(SHIFT_REG_T_SHCP,LOW);
+  bool a[] = {1,0,0,0,0,0};
+  for (int i=0; i<8; i++){
+    digitalWrite(SHIFT_REG_T_STCP,LOW);
+    digitalWrite(SHIFT_REG_T_DS,a[i]);
+    digitalWrite(SHIFT_REG_T_STCP,HIGH);
+  }
+  digitalWrite(SHIFT_REG_T_SHCP,HIGH);
+
+  /*
+
+  digitalWrite(SHIFT_REG_R_SHCP,LOW);
+  for (int i=0; i<8;i++){
+    digitalWrite(SHIFT_REG_R_STCP,LOW);
+    digitalWrite(SHIFT_REG_R_DS,1);
+    digitalWrite(SHIFT_REG_R_STCP,HIGH);
+  }
+  digitalWrite(SHIFT_REG_R_SHCP,HIGH);
+  */
+
 
 }
 
@@ -86,7 +96,7 @@ T_SHIFT_REG_SHCP = 0;
   digitalWrite(SHIFT_REG_G_DS,0);
   digitalWrite(SHIFT_REG_G_STCP,0);
   digitalWrite(SHIFT_REG_G_SHCP,0);
-  
+
   digitalWrite(SHIFT_REG_T_DS,0);
   digitalWrite(SHIFT_REG_T_STCP,0);
   digitalWrite(SHIFT_REG_T_SHCP,0);
@@ -117,11 +127,13 @@ void setup() {
   pinMode(SHIFT_REG_T_STCP,OUTPUT);
   pinMode(SHIFT_REG_T_SHCP,OUTPUT);
 
-  init();
+
+  // init();
+  makeRed();
 }
 
 
 
 void loop() {
-  update();
+  
 }
