@@ -55,6 +55,24 @@ void transistorClear(){
 
 void transistorShift() {
 
+  for (int i=0; i<rows; i++){
+    if ((i==(rows-1)) && (transistor[i]==1)){
+      transistor[0]=1;
+      transistor[i]=0;
+    } else if (transistor[i]==1){
+      transistor[i]==0;
+      transistor[i+1]==1;
+      i+=1;
+    }
+  }
+
+  digitalWrite(SHIFT_REG_T_SHCP,LOW);
+  for (int j=rows; j>0; j--){
+      digitalWrite(SHIFT_REG_T_STCP,LOW);
+      digitalWrite(SHIFT_REG_T_DS,transistor[j]);
+      digitalWrite(SHIFT_REG_T_STCP,HIGH);
+    }
+  digitalWrite(SHIFT_REG_T_SHCP,HIGH);
 }
 
 void clearAll(){
@@ -78,24 +96,24 @@ void fillBlank(char color){
   }
 }
 
-void draw()(/* HIER BOARD UEBERGEBEN - MAP */){
+void draw(){
 
   short SR1[rows/2][columns];
   short SR2[rows/2][columns];
 
   for (int i = 0; i<rows; i++){
     for (int j = 0; j<columns; j++){
-      if (map[i][j]>4){ // First SHIFT_REG
-        if (map[i][j]==3){
+      if (Register[i][j]>4){ // First SHIFT_REG
+        if (Register[i][j]==3){
           SR1[i+1][j]==1;
         } else {
-          SR1[i][j]==map[i][j];
+          SR1[i][j]==Register[i][j];
         }
-      }else if (map[i][j]<=4){ // Second SHIFT_REG
-        if (map[i][j]==3){
+      }else if (Register[i][j]<=4){ // Second SHIFT_REG
+        if (Register[i][j]==3){
           SR2[i-(columns/2)+1][j]==1;
         } else{
-          SR2[i=(columns/2)][j]==map[i][j];
+          SR2[i=(columns/2)][j]==Register[i][j];
         }
       }
     }
