@@ -2,17 +2,17 @@
 
 // I/O DEFINITIONS
 
-//Shift-Register I/O for red input of LEDs
-#define SHIFT_REG_R_DS 7
-#define SHIFT_REG_R_SHCP 8
-#define SHIFT_REG_R_STCP 9
+//Shift-Register I/O for  input of LEDs 1-4
+#define SHIFT_REG_1_DS 7
+#define SHIFT_REG_1_SHCP 8
+#define SHIFT_REG_1_STCP 9
 
-//Shift-Register I/O for green input of LEDs
-#define SHIFT_REG_G_DS 3
-#define SHIFT_REG_G_SHCP 4
-#define SHIFT_REG_G_STCP 5
+//Shift-Register I/O for input of LEDs 4-8
+#define SHIFT_REG_2_DS 3
+#define SHIFT_REG_2_SHCP 4
+#define SHIFT_REG_2_STCP 5
 
-// Shift-Register I/O for iransistor IC
+// Shift-Register I/O for transistor IC
 #define SHIFT_REG_T_DS 11
 #define SHIFT_REG_T_SHCP 12
 #define SHIFT_REG_T_STCP 13
@@ -26,12 +26,8 @@ const short columns = 8; // 2 bits
 short Register[rows][columns]; // [0 - OFF], [1 - Red],  [2 - Green] // 8*8*2 = 128 bits
 short transistor[rows]; //8*2= 16 bits
 
-bool RG_SHIFT_REG_STCP; // 1 bit
-bool RG_SHIFT_REG_SHCP; // 1 bit
-bool T_SHIFT_REG_STCP; // 1 bit
-bool T_SHIFT_REG_SHCP; // 1 bit
 
-// total size: 152 bits (of memory needed during runtime)
+// total size: 158 bits (of memory needed during runtime)
 
 // FUNCTION DEFINITIONS
 
@@ -43,68 +39,124 @@ void transistorWrite(short x, short value) {  // Value: [0 - OFF], [1 - ON]
   transistor[x]=value;
 } // + 4 bits needed during execution
 
-void makeRed(){
-
-/*
-  for (int i=0; i<rows;i++){
-    for (int j=0; j<columns; j++) {
-        registerWrite(i,j,1);
-    } }
-*/
-
-  digitalWrite(SHIFT_REG_T_SHCP,LOW);
-  bool a[] = {1,0,0,0,0,0};
-  for (int i=0; i<8; i++){
-    digitalWrite(SHIFT_REG_T_STCP,LOW);
-    digitalWrite(SHIFT_REG_T_DS,a[i]);
-    digitalWrite(SHIFT_REG_T_STCP,HIGH);
-  }
-  digitalWrite(SHIFT_REG_T_SHCP,HIGH);
-
-  /*
-
-  digitalWrite(SHIFT_REG_R_SHCP,LOW);
-  for (int i=0; i<8;i++){
-    digitalWrite(SHIFT_REG_R_STCP,LOW);
-    digitalWrite(SHIFT_REG_R_DS,1);
-    digitalWrite(SHIFT_REG_R_STCP,HIGH);
-  }
-  digitalWrite(SHIFT_REG_R_SHCP,HIGH);
-  */
-
-
-}
-
-void init() {
-
-RG_SHIFT_REG_STCP = 0;
-RG_SHIFT_REG_SHCP = 0;
-T_SHIFT_REG_STCP = 0;
-T_SHIFT_REG_SHCP = 0;
-
-  for (int i=0; i<rows;i++){
-      transistorWrite(i,0);
+void registerClear(){
+   for (int i=0; i<rows;i++){
     for (int j=0; j<columns; j++) {
         registerWrite(i,j,0);
     }
   }
+}
 
-  digitalWrite(SHIFT_REG_R_DS,0);
-  digitalWrite(SHIFT_REG_R_STCP,0);
-  digitalWrite(SHIFT_REG_R_SHCP,0);
+void transistorClear(){
+   for (int i=0; i<rows;i++){
+      transistorWrite(i,0);
+  }
+}
 
-  digitalWrite(SHIFT_REG_G_DS,0);
-  digitalWrite(SHIFT_REG_G_STCP,0);
-  digitalWrite(SHIFT_REG_G_SHCP,0);
+void transistorShift() {
+
+}
+
+void clearAll(){
+  transistorClear();
+  registerClear();
+}
+
+void fillBlank(char color){
+  if(color=='r'){
+    for (int i=0; i<rows;i++){
+      for (int j=0; j<columns; j++) {
+          registerWrite(i,j,1);
+      }
+  }
+  } else if (color=='g'){
+    for (int i=0; i<rows;i++){
+      for (int j=0; j<columns; j++) {
+          registerWrite(i,j,1);
+      }
+  }
+  }
+}
+
+void draw()(/* HIER BOARD UEBERGEBEN - MAP */){
+
+  short SR1[rows/2][columns];
+  short SR2[rows/2][columns];
+
+  for (int i = 0; i<rows; i++){
+    for (int j = 0; j<columns; j++){
+      if (map[i][j]>4){ // First SHIFT_REG
+        if (map[i][j]==3){
+          SR1[i+1][j]==1;
+        } else {
+          SR1[i][j]==map[i][j];
+        }
+      }else if (map[i][j]<=4){ // Second SHIFT_REG
+        if (map[i][j]==3){
+          SR2[i-(columns/2)+1][j]==1;
+        } else{
+          SR2[i=(columns/2)][j]==map[i][j];
+        }
+      }
+    }
+  }
+
+  for(int i=rows; i>0; i--){
+
+    digitalWrite(SHIFT_REG_1_SHCP,LOW);
+    digitalWrite(SHIFT_REG_2_SHCP,LOW);
+    for (int j=columns; j>0; j--){
+      digitalWrite(SHIFT_REG_1_STCP,LOW);
+      digitalWrite(SHIFT_REG_1_DS,SR1[i][j]);
+      digitalWrite(SHIFT_REG_1_STCP,HIGH);
+
+      digitalWrite(SHIFT_REG_2_STCP,LOW);
+      digitalWrite(SHIFT_REG_2_DS,SR2[i][j]);
+      digitalWrite(SHIFT_REG_2_STCP,HIGH);
+    }
+    digitalWrite(SHIFT_REG_1_SHCP,HIGH);
+    digitalWrite(SHIFT_REG_2_SHCP,HIGH);
+    transistorShift();
+  }
+}
+
+void update()  {
+  draw();
+}
+
+void init() {
+
+  clearAll;
+
+  // Declaring outputs for Register inputs
+  pinMode(SHIFT_REG_1_DS,OUTPUT);
+  pinMode(SHIFT_REG_1_STCP,OUTPUT);
+  pinMode(SHIFT_REG_1_SHCP,OUTPUT);
+
+  pinMode(SHIFT_REG_2_DS,OUTPUT);
+  pinMode(SHIFT_REG_2_STCP,OUTPUT);
+  pinMode(SHIFT_REG_2_SHCP,OUTPUT);
+
+  pinMode(SHIFT_REG_T_DS,OUTPUT);
+  pinMode(SHIFT_REG_T_STCP,OUTPUT);
+  pinMode(SHIFT_REG_T_SHCP,OUTPUT);
+
+  digitalWrite(SHIFT_REG_1_DS,0);
+  digitalWrite(SHIFT_REG_1_STCP,0);
+  digitalWrite(SHIFT_REG_1_SHCP,0);
+
+  digitalWrite(SHIFT_REG_2_DS,0);
+  digitalWrite(SHIFT_REG_2_STCP,0);
+  digitalWrite(SHIFT_REG_2_SHCP,0);
 
   digitalWrite(SHIFT_REG_T_DS,0);
   digitalWrite(SHIFT_REG_T_STCP,0);
   digitalWrite(SHIFT_REG_T_SHCP,0);
 
+  draw();
 
-}
-
-void update()  {
+  fillBlank('r');
+  update();
 
 }
 
@@ -113,27 +165,11 @@ void update()  {
 
 
 void setup() {
-
-  // Declaring outputs for Register inputs
-  pinMode(SHIFT_REG_R_DS,OUTPUT);
-  pinMode(SHIFT_REG_R_STCP,OUTPUT);
-  pinMode(SHIFT_REG_R_SHCP,OUTPUT);
-
-  pinMode(SHIFT_REG_G_DS,OUTPUT);
-  pinMode(SHIFT_REG_G_STCP,OUTPUT);
-  pinMode(SHIFT_REG_G_SHCP,OUTPUT);
-
-  pinMode(SHIFT_REG_T_DS,OUTPUT);
-  pinMode(SHIFT_REG_T_STCP,OUTPUT);
-  pinMode(SHIFT_REG_T_SHCP,OUTPUT);
-
-
-  // init();
-  makeRed();
+  init();
 }
 
 
 
 void loop() {
-  
+
 }
