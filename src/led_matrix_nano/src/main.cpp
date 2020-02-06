@@ -129,7 +129,7 @@ void draw(){
   for (int r = 0; r<rows; r++){
     for (int c=0; c<columns; c++){
 
-      if (c<=4){
+      if (c<=3){
         if(Register[c][r]==0){
             if (c==0){
               SR1[c][r]=0;
@@ -157,30 +157,31 @@ void draw(){
         }
       }
 
-        if(c>4){
+        if(c>=4){
+          int b = c-4;
           if(Register[c][r]==0){
             if (c==0){
-              SR2[c-4][r]=0;
-              SR2[c+1-4][r]=0;
+              SR2[b][r]=0;
+              SR2[b+1][r]=0;
             } else {
-            SR2[c+c-4][r]=0;
-            SR2[c+c+1-4][r]=0;
+            SR2[b+b][r]=0;
+            SR2[b+b+1][r]=0;
             }
         } else if (Register[c][r]==1){
             if (c==0){
-              SR2[c-4][r]=1;
-              SR2[c+1-4][r]=0;
+              SR2[b][r]=1;
+              SR2[b+1][r]=0;
             } else {
-            SR2[c+c-4][r]=1;
-            SR2[c+c+1-4][r]=0;
+            SR2[b+b][r]=1;
+            SR2[b+b+1][r]=0;
             }
         } else if (Register[c][r]==2){
             if (c==0){
-              SR2[c-4][r]=0;
-              SR2[c+1-4][r]=1;
+              SR2[b][r]=0;
+              SR2[b+1][r]=1;
             } else {
-            SR2[c+c-4][r]=0;
-            SR2[c+c+1-4][r]=1;
+            SR2[b+b][r]=0;
+            SR2[b+b+1][r]=1;
             }
         }
         }
