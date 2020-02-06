@@ -131,27 +131,57 @@ void draw(){
 
       if (c<=4){
         if(Register[c][r]==0){
-            SR1[c+1][r]=0;
-            SR1[c+1+1][r]=0;
+            if (c==0){
+              SR1[c][r]=0;
+              SR1[c+1][r]=0;
+            } else {
+            SR1[c+c][r]=0;
+            SR1[c+c+1][r]=0;
+            }
         } else if (Register[c][r]==1){
-            SR1[c+1][r]=1;
-            SR1[c+1+1][r]=0;
+            if (c==0){
+              SR1[c][r]=1;
+              SR1[c+1][r]=0;
+            } else {
+            SR1[c+c][r]=1;
+            SR1[c+c+1][r]=0;
+            }
         } else if (Register[c][r]==2){
-            SR1[c+1][r]=0;
-            SR1[c+1+1][r]=1;
+            if (c==0){
+              SR1[c][r]=0;
+              SR1[c+1][r]=1;
+            } else {
+            SR1[c+c][r]=0;
+            SR1[c+c+1][r]=1;
+            }
         }
       }
 
         if(c>4){
           if(Register[c][r]==0){
-            SR2[c-4+1][r]=0;
-            SR2[c+1-4+1][r]=0;
+            if (c==0){
+              SR2[c-4][r]=0;
+              SR2[c+1-4][r]=0;
+            } else {
+            SR2[c+c-4][r]=0;
+            SR2[c+c+1-4][r]=0;
+            }
         } else if (Register[c][r]==1){
-            SR2[c-4+1][r]=1;
-            SR2[c+1-4+1][r]=0;
+            if (c==0){
+              SR2[c-4][r]=1;
+              SR2[c+1-4][r]=0;
+            } else {
+            SR2[c+c-4][r]=1;
+            SR2[c+c+1-4][r]=0;
+            }
         } else if (Register[c][r]==2){
-            SR2[c-4+1][r]=0;
-            SR2[c+1-4+1][r]=1;
+            if (c==0){
+              SR2[c-4][r]=0;
+              SR2[c+1-4][r]=1;
+            } else {
+            SR2[c+c-4][r]=0;
+            SR2[c+c+1-4][r]=1;
+            }
         }
         }
     }
