@@ -100,7 +100,7 @@ void fillBlank(char color){
   if(color=='r'){
     for (int i=0; i<rows;i++){
       for (int j=0; j<columns; j++) {
-          registerWrite(i,j,1);
+          registerWrite(i,j,2);
       }
   }
   } else if (color=='g'){
@@ -189,57 +189,28 @@ void draw(){
   }
 
 
+  int x=128;
+  for(int i=rows; i>0; i--){
 
+    digitalWrite(SHIFT_REG_1_STCP,LOW);
+    digitalWrite(SHIFT_REG_2_STCP,LOW);
+    digitalWrite(SHIFT_REG_T_STCP,LOW);
+    for (int j=columns; j>0; j--){
+      digitalWrite(SHIFT_REG_1_SHCP,LOW);
+      digitalWrite(SHIFT_REG_1_DS,SR1[j][i]);
+      digitalWrite(SHIFT_REG_1_SHCP,HIGH);
 
-
-
-Serial.println(3);
-Serial.print("-------"); 
-for(int i=0; i<8; i++) {
-    Serial.print(SR1[0][i]); 
-    Serial.print(SR1[1][i]); 
-    Serial.print(SR1[2][i]); 
-    Serial.print(SR1[3][i]); 
-    Serial.print(SR1[4][i]); 
-    Serial.print(SR1[5][i]); 
-    Serial.print(SR1[6][i]); 
-    Serial.print(SR1[7][i]);
-    Serial.print(" ");
-    Serial.print(SR2[0][i]);
-    Serial.print(SR2[1][i]);
-    Serial.print(SR2[2][i]);
-    Serial.print(SR2[3][i]);
-    Serial.print(SR2[4][i]);
-    Serial.print(SR2[5][i]);
-    Serial.print(SR2[6][i]);
-    Serial.print(SR2[7][i]);
-    Serial.println("");
-}
-Serial.print("-------"); 
-  
-  
-//   int x=128;
-//   for(int i=rows; i>0; i--){
-
-//     digitalWrite(SHIFT_REG_1_STCP,LOW);
-//     digitalWrite(SHIFT_REG_2_STCP,LOW);
-//     digitalWrite(SHIFT_REG_T_STCP,LOW);
-//     for (int j=columns; j>0; j--){
-//       digitalWrite(SHIFT_REG_1_SHCP,LOW);
-//       digitalWrite(SHIFT_REG_1_DS,SR1[i][j]);
-//       digitalWrite(SHIFT_REG_1_SHCP,HIGH);
-
-//       digitalWrite(SHIFT_REG_2_SHCP,LOW);
-//       digitalWrite(SHIFT_REG_2_DS,SR2[i][j]);
-//       digitalWrite(SHIFT_REG_2_SHCP,HIGH);
-//     }
-//     digitalWrite(SHIFT_REG_1_STCP,HIGH);
-//     digitalWrite(SHIFT_REG_2_STCP,HIGH);
-//     shiftOut(SHIFT_REG_T_DS, SHIFT_REG_T_SHCP, LSBFIRST, x);
-//     digitalWrite(SHIFT_REG_T_STCP, HIGH);
-//     x = x >> 1;
-  // }
-}
+      digitalWrite(SHIFT_REG_2_SHCP,LOW);
+      digitalWrite(SHIFT_REG_2_DS,SR2[j][i]);
+      digitalWrite(SHIFT_REG_2_SHCP,HIGH);
+    }
+    digitalWrite(SHIFT_REG_1_STCP,HIGH);
+    digitalWrite(SHIFT_REG_2_STCP,HIGH);
+    shiftOut(SHIFT_REG_T_DS, SHIFT_REG_T_SHCP, LSBFIRST, x);
+    digitalWrite(SHIFT_REG_T_STCP, HIGH);
+    x = x >> 1;
+  }
+} }
 
 void update()  {
   draw();
