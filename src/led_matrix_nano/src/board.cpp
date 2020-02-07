@@ -420,6 +420,7 @@ void board::fill(short f){
     }
 }
 
+
 void board::set_default(){
 
     for (int i=0; i<8; i++){

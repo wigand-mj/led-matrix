@@ -3,6 +3,7 @@
 #include "board.h"
 #include "snake.h"
 
+
 #define SCHLANGE 1
 #define WAND 2
 #define ESSEN 3
@@ -39,6 +40,7 @@ int startposy;
   int startposx = round((dimx/2));
   int startposy = round((dimy/2));
   int counter=0;
+  int snake_speed = 100;
 
 board board1;
 snake* snake1 = new snake(s_length,startposx, startposy, startHeading);
@@ -55,8 +57,28 @@ void update(int mode) { // MUSS EVTL NOCH UMBESCHRIEBEN WERDEN
     }
 }
 
-void eat() {
+void create_item_pattern(){
+    bool re = false;
+    int x; 
+    int y;
+    
+    while(re){}
+    x = random(1,dimx-1);
+    y = random(1,dimy-1);
+    for (int i = 0; i<(snake1->getlength()); i++){
+        if (x==(snake1->getposx(i))){
+            re=true;
+        }
+        if (y==(snake1->getposy(i))){
+            re=true;
+        }
+    }
 
+     board1.setvalue(ESSEN,x,y);
+}
+    
+void eat() {
+    create_item_pattern();
     snake1->grow();
     points+=100;
     if (points%200 == 0){
@@ -146,6 +168,7 @@ void go() {
 
 void setup(){
   Serial.begin(9600);
+  create_item_pattern();
     /*
   dimx = 40+2;
   dimy = 20+2;
@@ -162,11 +185,12 @@ void setup(){
     */
 }
 
+
 void loop(){
         if (STATE == WELCOME){
           STATE = INIT;
         } else if (STATE == INIT) {
-            create_items(create_item_pattern(dimx,dimy,item_amount));
+            //create_items(create_item_pattern(dimx,dimy,item_amount));
             update_snake_pos();
             //update(0);
 
@@ -185,7 +209,7 @@ void loop(){
                 
             }
             */
-           if (counter==100){
+           if (counter==snake_speed){
             go();
             counter=0;
            } else {
