@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
-#include <Board.h>
-#include <snake.h>
+#include "board.h"
+#include "snake.h"
 
 #define SCHLANGE 1
 #define WAND 2
@@ -27,7 +27,7 @@ char startHeading;
 int startposx;
 int startposy;
 
-Board board1(dimx,dimy);
+Board board1();
 snake* snake1 = new snake(s_length,startposx, startposy, startHeading);
 
 
