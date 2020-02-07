@@ -3,6 +3,11 @@
 #include "board.h"
 #include "snake.h"
 
+#define BUTTON_UP A0
+#define BUTTON_DOWN A1
+#define BUTTON_LEFT A2
+#define BUTTON_RIGHT A3
+
 
 #define SCHLANGE 1
 #define WAND 2
@@ -40,7 +45,7 @@ int startposy;
   int startposx = round((dimx/2));
   int startposy = round((dimy/2));
   int counter=0;
-  int snake_speed = 100;
+  int snake_speed = 50;
 
 board board1;
 snake* snake1 = new snake(s_length,startposx, startposy, startHeading);
@@ -159,6 +164,24 @@ void go() {
 
 }
 
+char read_key(){
+    char output;
+    if (digitalRead(BUTTON_UP)==HIGH){  
+        output='w';
+    }
+    if (digitalRead(BUTTON_DOWN)==HIGH){
+        output='s';
+    }
+    if (digitalRead(BUTTON_LEFT)==HIGH){
+        output='a';
+    }
+    if (digitalRead(BUTTON_RIGHT)==HIGH){
+        output='d';
+    }
+
+    return output;
+
+}
 
 
 
@@ -169,6 +192,13 @@ void go() {
 void setup(){
   Serial.begin(9600);
   create_item_pattern();
+    
+  pinMode(BUTTON_UP, INPUT);
+  pinMode(BUTTON_DOWN, INPUT);
+  pinMode(BUTTON_LEFT, INPUT);
+  pinMode(BUTTON_RIGHT, INPUT);
+
+
     /*
   dimx = 40+2;
   dimy = 20+2;
@@ -196,8 +226,8 @@ void loop(){
 
             STATE = OP;
         } else if (STATE == OP) {
-            //char input = read_key(100);
-            /*
+            char input = read_key();
+            
             if (input == 'w' || input == 'a' || input == 's' || input == 'd') { 
                 if (!(((input == 'w') && (snake1->getheading() == 's')) || 
                       ((input == 's') && (snake1->getheading() == 'w')) || 
@@ -208,7 +238,7 @@ void loop(){
                 }
                 
             }
-            */
+            
            if (counter==snake_speed){
             go();
             counter=0;

@@ -427,8 +427,10 @@ void board::set_default(){
         for (int j=0; j<8; j++){
           if ((j==0) || (j==7)){
             mat[i][j]=2;
+            //mat[i][j]=0;
           } else if ((i==0) || (i==7)){
             mat[i][j]=2;
+            //mat[i][j]=0;
           } else {
             mat[i][j]=0;
           }
