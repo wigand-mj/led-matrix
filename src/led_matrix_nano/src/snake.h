@@ -1,6 +1,8 @@
 #ifndef _SNAKE_H_
 #define _SNAKE_H_
 
+#include <Arduino.h>
+
 class node {
 public:
 	int posx;

@@ -1,4 +1,5 @@
-#include "./../include/snake.h"
+#include <Arduino.h>
+#include "snake.h"
 
 
 

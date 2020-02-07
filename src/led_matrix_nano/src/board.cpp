@@ -19,21 +19,19 @@
 // Row-Adresses for IC SN74HC595N
 
 //Max:
- 
 short trow [9] = {0,1,2,4,8,16,32,64,128};
 short grow [9] = {0,128,32,8,1,64,32,8,2};
 short rrow [9] = {0,64,16,4,2,128,16,4,1};
 short yrow [9] = {0,192,48,12,3,192,48,12,3};
 
-
-/*//Mike:
- 
+//Maik:
+ /*
 short trow [9] = {0,1,2,4,8,16,32,64,128};
 short grow [9] = {0,64,16,4,1,64,16,4,1};
 short rrow [9] = {0,128,32,16,2,128,32,16,2};
 short yrow [9] = {0,192,48,12,3,192,48,12,3};
-
 */
+
 
 
 void board::init() {
@@ -47,6 +45,8 @@ void board::init() {
   pinMode (REG_T_SHCP, OUTPUT);
   pinMode (REG_T_STCP, OUTPUT);
 
+  
+     set_default();
   
 }
 
@@ -404,12 +404,39 @@ short board::getvalue(short x, short y) {
         return mat[x][y];
 }
 
-board::board(){
-  
-        for (int i=0; i<8; i++){
-            for (int j=0; j<8; j++){
-                mat[j][i] = 0;
-            }
-        }
+
+void board::fill(short f){
+  for (int i=0; i<8; i++){
+        for (int j=0; j<8; j++){
+          if ((j==0) || (j==7)){
+            mat[i][j]=f;
+          } else if ((i==0) || (i==7)){
+            mat[i][j]=2;
+          } else {
+            mat[i][j]=f;
+          }
     }
+
+    }
+}
+
+void board::set_default(){
+
+    for (int i=0; i<8; i++){
+        for (int j=0; j<8; j++){
+          if ((j==0) || (j==7)){
+            mat[i][j]=2;
+          } else if ((i==0) || (i==7)){
+            mat[i][j]=2;
+          } else {
+            mat[i][j]=0;
+          }
+    }
+
+    }
+}
+
+board::board(){
+  init();
+  }
 board::~board(){}

@@ -13,6 +13,8 @@ class board {
     void init();
     void setvalue(short value, short x, short y);
     short getvalue(short x, short y);
+    void set_default();
+    void fill(short f);
 
 };
 
