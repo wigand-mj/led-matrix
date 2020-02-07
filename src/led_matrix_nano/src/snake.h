@@ -1,6 +1,6 @@
 #ifndef _SNAKE_H_
 #define _SNAKE_H_
-#include <cstddef>
+
 class node {
 public:
 	int posx;

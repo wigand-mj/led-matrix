@@ -1,12 +1,9 @@
 #include "./../include/snake.h"
-#include <assert.h>
 
 
 
 snake::snake(int startlength, int startx, int starty, char startheading) {
-	if (startlength < 2) {
-		assert(false);
-	}
+	
 	length = startlength;
 	heading = startheading;
 	first = new node(startx, starty, '0'); // memory leak?
