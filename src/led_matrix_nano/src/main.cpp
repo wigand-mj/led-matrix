@@ -3,10 +3,15 @@
 #include "board.h"
 #include "snake.h"
 
-#define BUTTON_UP A0
-#define BUTTON_DOWN A1
-#define BUTTON_LEFT A2
-#define BUTTON_RIGHT A3
+// Taster
+// #define BUTTON_UP A0
+// #define BUTTON_DOWN A1
+// #define BUTTON_LEFT A2
+// #define BUTTON_RIGHT A3
+
+// Analog Stick
+#define BUTTON_UD A0
+#define BUTTON_LR A1
 
 
 #define SCHLANGE 1
@@ -164,19 +169,60 @@ void go() {
 
 }
 
+
+// Taster
+// char read_key(){
+//     char output;
+//     if (digitalRead(BUTTON_UP)==HIGH){  
+//         output='w';
+//     }
+//     if (digitalRead(BUTTON_DOWN)==HIGH){
+//         output='s';
+//     }
+//     if (digitalRead(BUTTON_LEFT)==HIGH){
+//         output='a';
+//     }
+//     if (digitalRead(BUTTON_RIGHT)==HIGH){
+//         output='d';
+//     }
+
+//     return output;
+
+// }
+
+// Analog Stick
+// char read_key(){
+//     char output = 'g';
+//     if (map(analogRead(BUTTON_UD),0,770,0,100)>93){
+//         output='w';
+//     }
+//     if (map(analogRead(BUTTON_UD),0,770,0,100)<40){
+//         output='s';
+//     }
+//     if (map(analogRead(BUTTON_LR),0,1021,0,100)<=15){
+//         output='a';
+//     }
+//     if (map(analogRead(BUTTON_LR),0,1021,0,100)>=70){
+//         output='d';
+//     }
+
+//     return output;
+
+// }
+
 char read_key(){
-    char output;
-    if (digitalRead(BUTTON_UP)==HIGH){  
-        output='w';
+    char output = 'g';
+    if (map(analogRead(BUTTON_UD),0,770,0,100)>93){
+        output='d';
     }
-    if (digitalRead(BUTTON_DOWN)==HIGH){
-        output='s';
-    }
-    if (digitalRead(BUTTON_LEFT)==HIGH){
+    if (map(analogRead(BUTTON_UD),0,770,0,100)<40){
         output='a';
     }
-    if (digitalRead(BUTTON_RIGHT)==HIGH){
-        output='d';
+    if (map(analogRead(BUTTON_LR),0,1021,0,100)<=15){
+        output='s';
+    }
+    if (map(analogRead(BUTTON_LR),0,1021,0,100)>=70){
+        output='w';
     }
 
     return output;
@@ -189,30 +235,18 @@ char read_key(){
 
 
 
+
+
 void setup(){
   Serial.begin(9600);
   create_item_pattern();
-    
-  pinMode(BUTTON_UP, INPUT);
-  pinMode(BUTTON_DOWN, INPUT);
-  pinMode(BUTTON_LEFT, INPUT);
-  pinMode(BUTTON_RIGHT, INPUT);
 
+// Taster
+//   pinMode(BUTTON_UP, INPUT);
+//   pinMode(BUTTON_DOWN, INPUT);
+//   pinMode(BUTTON_LEFT, INPUT);
+//   pinMode(BUTTON_RIGHT, INPUT);
 
-    /*
-  dimx = 40+2;
-  dimy = 20+2;
-  Serial.print("-");
-  STATE = 0;
-  s_length = 4;
-  points = 0;
-  item_amount = 12;
-  startHeading = 's';
-  Serial.print("-");
-  startposx = round((dimx/2));
-  startposy = round((dimy/2));
-  Serial.print("-");
-    */
 }
 
 
@@ -226,19 +260,21 @@ void loop(){
 
             STATE = OP;
         } else if (STATE == OP) {
+
             char input = read_key();
-            
-            if (input == 'w' || input == 'a' || input == 's' || input == 'd') { 
-                if (!(((input == 'w') && (snake1->getheading() == 's')) || 
-                      ((input == 's') && (snake1->getheading() == 'w')) || 
-                      ((input == 'a') && (snake1->getheading() == 'd')) || 
+            // Serial.println(input);
+
+            if (input == 'w' || input == 'a' || input == 's' || input == 'd') {
+                if (!(((input == 'w') && (snake1->getheading() == 's')) ||
+                      ((input == 's') && (snake1->getheading() == 'w')) ||
+                      ((input == 'a') && (snake1->getheading() == 'd')) ||
                       ((input == 'd') && (snake1->getheading() == 'a')))) {
 
-                    snake1->setheading(input); 
+                    snake1->setheading(input);
                 }
-                
+
             }
-            
+
            if (counter==snake_speed){
             go();
             counter=0;
@@ -246,14 +282,18 @@ void loop(){
                counter++;
            }
            board1.draw();
-            
+
             //board1.draw();
-            
+
 
         } else if (STATE == GAMEOVER) {
           //CODE HERE
           board1.fill(1);
           board1.draw();
+
+        //   Serial.println(map(analogRead(BUTTON_UD),0,770,0,100));
+        //   Serial.println(map(analogRead(BUTTON_LR),0,1021,0,100));
+
         } else if (STATE == WIN) {
           //CODE HERE
         } else if (STATE == END) {
