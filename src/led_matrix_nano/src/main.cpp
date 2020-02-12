@@ -13,12 +13,13 @@
 #define BUTTON_UD A0
 #define BUTTON_LR A1
 
-
+// Defines color values for game objects
 #define SCHLANGE 1
 #define WAND 2
 #define ESSEN 3
 #define OFF 0
 
+// Defines states for state machine
 #define WELCOME 0
 #define OP 1
 #define WIN 2
@@ -26,23 +27,24 @@
 #define END 4
 #define INIT 5
 
-  int dimx = 8;
-  int dimy = 8;
-  short STATE = 0;
-  int s_length = 3;
-  int points = 0;
-  int item_amount = 12;
-  char startHeading = 's';
-  int startposx = round((dimx/2));
-  int startposy = round((dimy/2));
-  int counter=0;
-  int snake_speed = 50;
+
+int dimx = 8;
+int dimy = 8;
+short STATE = 0;
+int s_length = 3; // initial length of snake
+int points = 0;
+int item_amount = 6;
+char startHeading = 's'; // Snake directions are relative to hardware configuration
+int startposx = round((dimx/2));
+int startposy = round((dimy/2));
+int counter=0; // counter to time snake updates
+int snake_speed = 30; // smaller value = higher speed
 
 board board1;
 snake* snake1 = new snake(s_length,startposx, startposy, startHeading);
 
-
-void update(int mode) {
+// Output to LED matrix
+void update(int mode) { 
     switch(mode) {
         case(0):
             break;
@@ -52,6 +54,7 @@ void update(int mode) {
     }
 }
 
+// saves next item position in board
 void create_item_pattern(){
     bool re = false;
     int x; 
@@ -72,16 +75,16 @@ void create_item_pattern(){
      board1.setvalue(ESSEN,x,y);
 }
     
+// upon item collision
 void eat() {
-    create_item_pattern();
-    snake1->grow();
+    create_item_pattern(); // new item
+    snake1->grow(); // increase snake size
     points+=100;
-    if (points%200 == 0){
-    }
-    if (points==item_amount*100){STATE=WIN;}
+    if (points==item_amount*100){STATE=WIN;} // win condition
     
 }
 
+// Handles collision checks and behavior
 bool check_collision() {
     bool ret = false;
     switch(snake1->getheading()) {
@@ -125,6 +128,7 @@ bool check_collision() {
 }
 
 
+// updates snake position within data structure
 void snake_move() {
 
     if (!check_collision()) {
@@ -134,7 +138,7 @@ void snake_move() {
 
 }
 
-
+// updates snake position within board
 void update_snake_pos() {
 
     for (int i=0; i<snake1->getlength(); i++) {
@@ -146,11 +150,13 @@ void update_snake_pos() {
 
 }
 
+// update snake
 void go() {
     snake_move();
     update_snake_pos();
 }
 
+// Input handling
 
 // Taster
 // char read_key(){
@@ -202,9 +208,10 @@ char read_key(){
 
 
 void setup(){
-  Serial.begin(9600);
-  create_item_pattern();
+  Serial.begin(9600); // Serial output for debugging
+  create_item_pattern(); // get first item
 
+// Button initialization - only for digital buttons, not analog stick
 // Taster
 //   pinMode(BUTTON_UP, INPUT);
 //   pinMode(BUTTON_DOWN, INPUT);
@@ -213,18 +220,20 @@ void setup(){
 
 }
 
-
-void loop(){
+// "State Machine"
+void loop(){ 
         if (STATE == WELCOME){
           STATE = INIT;
         } else if (STATE == INIT) {
-            update_snake_pos();
+            update_snake_pos(); // save initial snake position in board
 
             STATE = OP;
-        } else if (STATE == OP) {
+        } else if (STATE == OP) { // Main game logic
 
+            //Input handling
             char input = read_key();
 
+            //Changes snake direction absed on input
             if (input == 'w' || input == 'a' || input == 's' || input == 'd') {
                 if (!(((input == 'w') && (snake1->getheading() == 's')) ||
                       ((input == 's') && (snake1->getheading() == 'w')) ||
@@ -236,20 +245,26 @@ void loop(){
 
             }
 
+            // handles snake timing - Seperates snake update timing form multiplex timing
+            // This way, the snake movement (update) speed is not bound to the multiplex time and can be set
+            // seperately.
            if (counter==snake_speed){
             go();
             counter=0;
            } else {
                counter++;
            }
+
+           // Output current board to LED matrix
            board1.draw();
 
         } else if (STATE == GAMEOVER) {
-          board1.fill(1);
+          board1.fill(2); // Fill board solid red
           board1.draw();
 
         } else if (STATE == WIN) {
-          // WIN behavior - not implemented
+            board1.fill(1); // // Fill board solid green
+            board1.draw();
         } else if (STATE == END) {
           // END behavior - not implemented
         }
