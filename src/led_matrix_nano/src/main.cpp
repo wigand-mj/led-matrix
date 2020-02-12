@@ -26,20 +26,6 @@
 #define END 4
 #define INIT 5
 
-
-
-/*
-int dimx;
-int dimy;
-short STATE;
-int s_length;
-int points;
-int item_amount;
-char startHeading;
-int startposx;
-int startposy;
-*/
-
   int dimx = 8;
   int dimy = 8;
   short STATE = 0;
@@ -56,10 +42,9 @@ board board1;
 snake* snake1 = new snake(s_length,startposx, startposy, startHeading);
 
 
-void update(int mode) { // MUSS EVTL NOCH UMBESCHRIEBEN WERDEN
+void update(int mode) {
     switch(mode) {
         case(0):
-            //board1.draw(0);
             break;
         case(1):
             board1.draw();
@@ -162,17 +147,15 @@ void update_snake_pos() {
 }
 
 void go() {
-
     snake_move();
     update_snake_pos();
-    //update(1);
-
 }
 
 
 // Taster
 // char read_key(){
 //     char output;
+//     char output = 'g';
 //     if (digitalRead(BUTTON_UP)==HIGH){  
 //         output='w';
 //     }
@@ -191,31 +174,12 @@ void go() {
 // }
 
 // Analog Stick
-// char read_key(){
-//     char output = 'g';
-//     if (map(analogRead(BUTTON_UD),0,770,0,100)>93){
-//         output='w';
-//     }
-//     if (map(analogRead(BUTTON_UD),0,770,0,100)<40){
-//         output='s';
-//     }
-//     if (map(analogRead(BUTTON_LR),0,1021,0,100)<=15){
-//         output='a';
-//     }
-//     if (map(analogRead(BUTTON_LR),0,1021,0,100)>=70){
-//         output='d';
-//     }
-
-//     return output;
-
-// }
-
 char read_key(){
     char output = 'g';
     if (map(analogRead(BUTTON_UD),0,770,0,100)>93){
         output='d';
     }
-    if (map(analogRead(BUTTON_UD),0,770,0,100)<40){
+    if (map(analogRead(BUTTON_UD),0,770,0,100)<60){
         output='a';
     }
     if (map(analogRead(BUTTON_LR),0,1021,0,100)<=15){
@@ -254,15 +218,12 @@ void loop(){
         if (STATE == WELCOME){
           STATE = INIT;
         } else if (STATE == INIT) {
-            //create_items(create_item_pattern(dimx,dimy,item_amount));
             update_snake_pos();
-            //update(0);
 
             STATE = OP;
         } else if (STATE == OP) {
 
             char input = read_key();
-            // Serial.println(input);
 
             if (input == 'w' || input == 'a' || input == 's' || input == 'd') {
                 if (!(((input == 'w') && (snake1->getheading() == 's')) ||
@@ -283,21 +244,14 @@ void loop(){
            }
            board1.draw();
 
-            //board1.draw();
-
-
         } else if (STATE == GAMEOVER) {
-          //CODE HERE
           board1.fill(1);
           board1.draw();
 
-        //   Serial.println(map(analogRead(BUTTON_UD),0,770,0,100));
-        //   Serial.println(map(analogRead(BUTTON_LR),0,1021,0,100));
-
         } else if (STATE == WIN) {
-          //CODE HERE
+          // WIN behavior - not implemented
         } else if (STATE == END) {
-          //CODE HERE
+          // END behavior - not implemented
         }
     }
 
