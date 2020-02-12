@@ -2,13 +2,14 @@
 #include "snake.h"
 
 
+// creates a snake with startlength and startheading at point startx/starty
 
 snake::snake(int startlength, int startx, int starty, char startheading) {
 	
 	length = startlength;
 	heading = startheading;
-	first = new node(startx, starty, '0'); // memory leak?
-	last = new node(startx,starty,'+'); // memory leak?
+	first = new node(startx, starty, '0'); 
+	last = new node(startx,starty,'+'); 
 
 	switch (startheading){
 		case 's': 
@@ -36,7 +37,7 @@ snake::snake(int startlength, int startx, int starty, char startheading) {
 		switch (startheading) {
 		case 's':
 			nextx = startx;
-			nexty = starty - 1;		//fixed Bug
+			nexty = starty - 1;		
 			break;
 		case 'a':
 			nextx = startx-1;
@@ -137,8 +138,10 @@ void snake::setheading(char Direction) {
 	return;
 }
 
+// adds a new node at the back of the snake in direction of the current heading
+
 void snake::grow() {
-	node* newn = new node(last->posx, last->posy, 'O'); // memory leak?
+	node* newn = new node(last->posx, last->posy, 'O'); 
 		switch (heading){
 
 	case 'w':
@@ -166,6 +169,8 @@ void snake::grow() {
 		last = newn;
 		length++;
 }
+
+// moves the snake by one in direction of the current heading
 
 void snake::move() {
 	int posnewx = first->posx;

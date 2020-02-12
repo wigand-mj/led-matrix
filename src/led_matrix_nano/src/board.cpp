@@ -33,7 +33,7 @@ short yrow [9] = {0,192,48,12,3,192,48,12,3};
 short grow[9] = {0,64,16,4,1,64,16,4,1};
 short rrow[9] = {0,128,32,8,2,128,32,8,2};
 
-
+// Initialises the board. To be used in setup method.
 
 void board::init() {
   pinMode (REG_1_DS, OUTPUT);
@@ -51,7 +51,7 @@ void board::init() {
   
 }
 
-// sets a pixel on 8x8 Matrix with color rg. 0= pixel off, 1=green ,2=red , 3=yellow
+// sets a pixel on 8x8 matrix with color rg. 0= pixel off, 1=green ,2=red , 3=yellow
 
 void board::setpixel(short rg, short x, short y){
       
@@ -397,15 +397,19 @@ void board::draw(){
    }
 }
 
+// sets a value on the mat matrix
+
 void board::setvalue(short value, short x, short y) {
     mat[x][y] = value;
 }
+
+// returns a value from the mat matrix
 
 short board::getvalue(short x, short y) {
         return mat[x][y];
 }
 
-
+// Fills up the complete mat matrix with a certain colour f:  0= pixel off, 1=green ,2=red , 3=yellow
 void board::fill(short f){
   for (int i=0; i<8; i++){
         for (int j=0; j<8; j++){
@@ -421,6 +425,7 @@ void board::fill(short f){
     }
 }
 
+// sets the matrix as the default screen
 
 void board::set_default(){
 
@@ -439,6 +444,7 @@ void board::set_default(){
 
     }
 }
+
 
 board::board(){
   init();
