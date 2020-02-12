@@ -61,8 +61,8 @@ void create_item_pattern(){
     int y;
     
     while(re){}
-    x = random(1,dimx-1);
-    y = random(1,dimy-1);
+    x = random(2,dimx-1);
+    y = random(2,dimy-1);
     for (int i = 0; i<(snake1->getlength()); i++){
         if (x==(snake1->getposx(i))){
             re=true;
